@@ -1,38 +1,131 @@
-.App {
+/* src/App.css */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f4f9;
+}
+.app {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+h1 {
   text-align: center;
+  color: #333;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.task-list {
+  margin-top: 20px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.task-item {
+  display: flex;
+  align-items: flex-start;
+  margin: 10px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f9f9f9;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.task-text-container {
+  flex: 1;
+  padding-right: 10px;
+}
+
+.task-item .task-text {
+  font-size: 16px;
+  cursor: pointer;
+  display: block;
+}
+
+.task-item .task-description {
+  font-size: 14px;
+  color: #555;
+}
+
+.task-item .task-text.completed,
+.task-item .task-description.completed {
+  text-decoration: line-through;  /* Strikethrough */
+  color: #888; 
+}
+
+.task-actions {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.task-actions button {
+  margin-left: 10px;
+  padding: 5px;
+  border: none;
+  border-radius: 50%;
+  background-color: transparent;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.task-actions .toggle-btn,
+.task-actions .delete-btn {
+  width: 32px;  /* Set width of icon buttons */
+  height: 32px; /* Set height of icon buttons */
+  font-size: 20px; /* Set icon size */
+}
+
+/* Color for button icons*/
+.task-actions .complete-btn span {
+  color: green; 
+}
+
+.task-actions .undo-btn span {
+  color: green; 
+}
+
+.task-actions .delete-btn span {
+  color: red; 
+}
+
+.task-actions .toggle-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.task-actions .delete-btn:hover {
+  background-color: #ffdddd;
+}
+
+form {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+form input, form textarea {
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+form button {
+  background-color: #4CAF50;
   color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+form button:hover {
+  background-color: #45a049;
 }
