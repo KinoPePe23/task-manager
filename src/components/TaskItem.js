@@ -1,8 +1,16 @@
-import React from 'react';
+import React, { useState } from 'react';
 
+// TaskItem component to display individual tasks
 const TaskItem = ({ task, onToggleComplete, onDelete }) => {
+  const [showModal, setShowModal] = useState(false);  // State to manage modal visibility
+
+  // Toggle the modal visibility
+  const handleModalToggle = () => {
+    setShowModal(!showModal);  // Toggle modal visibility state
+  };
+
   return (
-    <div className="task-item">
+    <div className={`task-item ${task.completed ? 'completed' : ''}`}>
       <div className="task-text-container">
         {/* Display the task title, click to toggle the task completion state */}
         <span
@@ -12,9 +20,12 @@ const TaskItem = ({ task, onToggleComplete, onDelete }) => {
           {task.title} {/* Display task title */}
         </span>
 
-        {/* Display the task description on the next line */}
-        <span className={`task-description ${task.completed ? 'completed' : ''}`} >
-          {task.description} {/* Display task description */}
+        {/* Display the task description in the task container */}
+        <span
+          className={`task-description ${task.completed ? 'completed' : ''}`} 
+          onClick={handleModalToggle}  // Toggle modal on description click
+        >
+          {task.description.slice(0, 50)}... {/* Show truncated task description */}
         </span>
       </div>
 
@@ -54,6 +65,17 @@ const TaskItem = ({ task, onToggleComplete, onDelete }) => {
           <span className="material-icons">delete</span> {/* Delete icon */}
         </button>
       </div>
+
+      {/* Modal for displaying full task description */}
+      {showModal && (
+        <div className="modal-overlay" onClick={handleModalToggle}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <h3>{task.title}</h3>
+            <p>{task.description}</p>
+            <button onClick={handleModalToggle}>Close</button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

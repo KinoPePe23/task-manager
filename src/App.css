@@ -7,19 +7,22 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #eef2f3; /* Background color */
+  background-color: #eef2f3;
 }
 
 /* App container styling */
 .app {
   padding: 20px;
-  max-width: 800px;
+  max-width: 600px;  /* Ensure the app content doesn't exceed this width */
   margin: 20px;
   border-radius: 10px;
   background-color: #ffffff;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  box-sizing: border-box;
 }
 
+/* Task manager header styling */
 h1 {
   text-align: center;
   color: #4caf50;
@@ -34,11 +37,11 @@ h1 {
 }
 
 .active-tasks {
-  background-color: #e8f5e9; /* Active task list background */
+  background-color: #e8f5e9;
 }
 
 .completed-tasks {
-  background-color: #e8f5e9; /* Completed task list background */
+  background-color: #e8f5e9;
 }
 
 /* Task section headers */
@@ -47,14 +50,14 @@ h1 {
   margin-bottom: 10px;
   color: #333;
   display: flex;
-  justify-content: space-between; /* Aligns title and arrow button */
+  justify-content: space-between;
   align-items: center;
 }
 
 /* Task item styling */
 .task-item {
   display: flex;
-  align-items: flex-start; /* Align items to the start to avoid any vertical misalignment */
+  align-items: flex-start;
   margin: 10px 0;
   padding: 10px;
   border: 1px solid #ddd;
@@ -71,7 +74,7 @@ h1 {
 .task-text-container {
   flex: 1;
   padding-right: 10px;
-  margin-bottom: 5px; /* Adjust spacing between title and description */
+  margin-bottom: 5px;
 }
 
 .task-text {
@@ -79,12 +82,18 @@ h1 {
   cursor: pointer;
 }
 
-/* Task description styling */
+/* Add strikethrough effect to completed tasks */
+.task-item.completed .task-text {
+  text-decoration: line-through; /* Strikethrough for completed tasks */
+  color: black; /* Change text color for completed tasks */
+}
+
 .task-description {
   font-size: 14px;
   color: #555;
-  display: block; /* Ensures description is on a new line */
-  margin-top: 5px; /* Add some space between task title and description */
+  display: block;
+  margin-top: 5px;
+  cursor: pointer;
 }
 
 .task-actions {
@@ -120,12 +129,12 @@ h1 {
 form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
   margin-bottom: 20px;
 }
 
 form input, form textarea {
-  padding: 10px;
+  padding: 12px;
   font-size: 14px;
   border: 1px solid #ddd;
   border-radius: 5px;
@@ -145,9 +154,67 @@ form button:hover {
   background-color: #45a049;
 }
 
-/* Styling for the toggle arrow button */
+/* Modal Styling */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); /* Dark background overlay */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+/* Center the modal content symmetrically with task list */
+.modal-content {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  width: 100%; /* Make modal width the same as task list width */
+  max-width: 400px; /* Max width to match task list max width */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align content to the left */
+  margin: 0 auto;  /* Center modal horizontally */
+}
+
+.modal-content h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.modal-content p {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #555;
+}
+
+.modal-content button {
+  background-color: #4caf50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
+  display: block;
+  margin-top: 15px;
+  width: 100%;
+}
+
+.modal-content button:hover {
+  background-color: #45a049;
+}
+
+/* Toggle button for completed tasks */
 .toggle-completed-btn {
-  background-color: #e8f5e9; /* Match completed tasks background */
+  background-color: #e8f5e9;
   border: none;
   border-radius: 50%;
   cursor: pointer;
@@ -155,14 +222,40 @@ form button:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background-color 0.3s ease-in-out;
 }
 
 .toggle-completed-btn:hover {
-  background-color: #d4e6d6; /* Slightly darker green for hover effect */
+  background-color: #d4e6d6;
 }
 
 .toggle-completed-btn span {
   font-size: 24px;
-  color: #333; /* Matches header color */
+  color: #333;
+}
+
+/* Media Query for smaller screens */
+@media (max-width: 600px) {
+  .task-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .task-text {
+    font-size: 14px;
+  }
+
+  .task-description {
+    font-size: 12px;
+  }
+
+  .task-actions button {
+    margin-left: 5px;
+    padding: 6px;
+  }
+
+  /* Modal styling on smaller screens */
+  .modal-content {
+    width: 80%; /* Modal takes 80% of the screen width on mobile */
+    max-width: 400px; /* Further reduce max-width on smaller screens */
+  }
 }
