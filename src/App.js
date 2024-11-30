@@ -19,7 +19,12 @@ const App = () => {
           const task = childSnapshot.val();
           tasksData.push({ id: childSnapshot.key, ...task });
         });
-        tasksData.sort((a, b) => a.completed - b.completed); // Sort by completion status
+        // Sort tasks by dueDate first (ascending), then by createdAt if no dueDate
+        tasksData.sort((a, b) => {
+          const dateA = a.dueDate || a.createdAt;  // Use dueDate if available, otherwise use createdAt
+          const dateB = b.dueDate || b.createdAt;
+          return new Date(dateA) - new Date(dateB);  // Ascending order
+        });
         setTasks(tasksData);
       } else {
         console.log('No data available');
@@ -33,7 +38,16 @@ const App = () => {
     try {
       const taskRef = ref(db, 'tasks/' + Date.now());
       await set(taskRef, task);
-      setTasks((prevTasks) => [task, ...prevTasks]);
+      setTasks((prevTasks) => {
+        const newTasks = [task, ...prevTasks];
+        // Re-sort tasks after adding a new one
+        newTasks.sort((a, b) => {
+          const dateA = a.dueDate || a.createdAt;
+          const dateB = b.dueDate || b.createdAt;
+          return new Date(dateA) - new Date(dateB);
+        });
+        return newTasks;
+      });
     } catch (e) {
       console.error('Error adding task: ', e);
     }
@@ -43,8 +57,8 @@ const App = () => {
   const deleteTask = async (id) => {
     try {
       const taskRef = ref(db, 'tasks/' + id);
-      await set(taskRef, null);
-      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
+      await set(taskRef, null);  // Delete task from the database
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));  // Remove task from state
     } catch (e) {
       console.error('Error deleting task: ', e);
     }
@@ -59,7 +73,11 @@ const App = () => {
       await set(taskRef, updatedTask);
       setTasks((prevTasks) => {
         const updatedTasks = prevTasks.map((t) => (t.id === id ? updatedTask : t));
-        updatedTasks.sort((a, b) => a.completed - b.completed);
+        updatedTasks.sort((a, b) => {
+          const dateA = a.dueDate || a.createdAt;
+          const dateB = b.dueDate || b.createdAt;
+          return new Date(dateA) - new Date(dateB);  // Sort tasks after completion update
+        });
         return updatedTasks;
       });
     }

@@ -118,11 +118,11 @@ h1 {
 }
 
 .task-actions .toggle-btn.undo-btn span {
-  color: orange;
+  color: gre;
 }
 
 .task-actions .delete-btn span {
-  color: red;
+  color: orange;
 }
 
 /* Form styling */
@@ -174,7 +174,7 @@ form button:hover {
   padding: 15px;
   border-radius: 8px;
   width: 100%; /* Make modal width the same as task list width */
-  max-width: 400px; /* Max width to match task list max width */
+  max-width: 500px; /* Max width to match task list max width */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   overflow-y: auto;
   display: flex;
