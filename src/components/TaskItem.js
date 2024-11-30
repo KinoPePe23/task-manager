@@ -1,4 +1,3 @@
-// src/TaskItem.js
 import React from 'react';
 
 const TaskItem = ({ task, onToggleComplete, onDelete }) => {
@@ -13,6 +12,7 @@ const TaskItem = ({ task, onToggleComplete, onDelete }) => {
           {task.title} {/* Display task title */}
         </span>
 
+        {/* Display the task description on the next line */}
         <span className={`task-description ${task.completed ? 'completed' : ''}`} >
           {task.description} {/* Display task description */}
         </span>

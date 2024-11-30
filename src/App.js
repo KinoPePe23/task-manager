@@ -6,8 +6,9 @@ import './App.css';
 
 const App = () => {
   const [tasks, setTasks] = useState([]);
+  const [showCompleted, setShowCompleted] = useState(true); // Toggle visibility of completed tasks
 
-  // Fetch task list
+  // Fetch tasks from Firebase on component mount
   useEffect(() => {
     const fetchTasks = async () => {
       const taskRef = ref(db, 'tasks');
@@ -18,9 +19,7 @@ const App = () => {
           const task = childSnapshot.val();
           tasksData.push({ id: childSnapshot.key, ...task });
         });
-
-        // Sort tasks: Incomplete tasks first, then completed tasks
-        tasksData.sort((a, b) => a.completed - b.completed || b.createdAt - a.createdAt);
+        tasksData.sort((a, b) => a.completed - b.completed); // Sort by completion status
         setTasks(tasksData);
       } else {
         console.log('No data available');
@@ -34,13 +33,7 @@ const App = () => {
     try {
       const taskRef = ref(db, 'tasks/' + Date.now());
       await set(taskRef, task);
-
-      // Add the new task and sort
-      setTasks((prevTasks) => {
-        const updatedTasks = [task, ...prevTasks];
-        updatedTasks.sort((a, b) => a.completed - b.completed || b.createdAt - a.createdAt);
-        return updatedTasks;
-      });
+      setTasks((prevTasks) => [task, ...prevTasks]);
     } catch (e) {
       console.error('Error adding task: ', e);
     }
@@ -50,25 +43,23 @@ const App = () => {
   const deleteTask = async (id) => {
     try {
       const taskRef = ref(db, 'tasks/' + id);
-      await set(taskRef, null); // Delete the task from Firebase
-      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id)); // Update the local task list
+      await set(taskRef, null);
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));
     } catch (e) {
       console.error('Error deleting task: ', e);
     }
   };
 
-  // Toggle task completion status
+  // Toggle completion status of a task
   const toggleTaskCompletion = async (id) => {
     const task = tasks.find((task) => task.id === id);
     if (task) {
       const updatedTask = { ...task, completed: !task.completed, updatedAt: Date.now() };
       const taskRef = ref(db, 'tasks/' + id);
       await set(taskRef, updatedTask);
-
-      // Update and sort the task list
       setTasks((prevTasks) => {
         const updatedTasks = prevTasks.map((t) => (t.id === id ? updatedTask : t));
-        updatedTasks.sort((a, b) => a.completed - b.completed || b.createdAt - a.createdAt);
+        updatedTasks.sort((a, b) => a.completed - b.completed);
         return updatedTasks;
       });
     }
@@ -78,15 +69,49 @@ const App = () => {
     <div className="app">
       <h1>Task Manager</h1>
       <TaskForm onSave={addTask} />
-      <div className="task-list">
-        {tasks.map((task) => (
-          <TaskItem
-            key={task.id}
-            task={task}
-            onToggleComplete={toggleTaskCompletion}
-            onDelete={deleteTask}
-          />
-        ))}
+
+      <div className="task-container">
+        {/* Active tasks section */}
+        <div className="task-section active-tasks">
+          <h2>Tasks</h2>
+          <div className="task-list">
+            {tasks.filter((task) => !task.completed).map((task) => (
+              <TaskItem
+                key={task.id}
+                task={task}
+                onToggleComplete={toggleTaskCompletion}
+                onDelete={deleteTask}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Completed tasks section */}
+        <div className="task-section completed-tasks">
+          <h2>
+            Completed
+            <button
+              className="toggle-completed-btn"
+              onClick={() => setShowCompleted((prev) => !prev)}
+            >
+              <span className="material-icons">
+                {showCompleted ? 'expand_less' : 'expand_more'}
+              </span>
+            </button>
+          </h2>
+          {showCompleted && (
+            <div className="task-list">
+              {tasks.filter((task) => task.completed).map((task) => (
+                <TaskItem
+                  key={task.id}
+                  task={task}
+                  onToggleComplete={toggleTaskCompletion}
+                  onDelete={deleteTask}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

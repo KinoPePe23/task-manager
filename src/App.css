@@ -1,4 +1,4 @@
-/* src/App.css */
+/* General body styling */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -6,103 +6,117 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: #f4f4f9;
+  min-height: 100vh;
+  background-color: #eef2f3; /* Background color */
 }
+
+/* App container styling */
 .app {
-  font-family: Arial, sans-serif;
   padding: 20px;
-  max-width: 600px;
-  margin: 0 auto;
+  max-width: 800px;
+  margin: 20px;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
   text-align: center;
+  color: #4caf50;
+}
+
+/* Task section styling */
+.task-section {
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.active-tasks {
+  background-color: #e8f5e9; /* Active task list background */
+}
+
+.completed-tasks {
+  background-color: #e8f5e9; /* Completed task list background */
+}
+
+/* Task section headers */
+.task-section h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
   color: #333;
+  display: flex;
+  justify-content: space-between; /* Aligns title and arrow button */
+  align-items: center;
 }
 
-.task-list {
-  margin-top: 20px;
-}
-
+/* Task item styling */
 .task-item {
   display: flex;
-  align-items: flex-start;
+  align-items: flex-start; /* Align items to the start to avoid any vertical misalignment */
   margin: 10px 0;
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 5px;
-  background-color: #f9f9f9;
+  background-color: #fff;
+  transition: box-shadow 0.3s;
 }
 
+.task-item:hover {
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Task text container styling */
 .task-text-container {
   flex: 1;
   padding-right: 10px;
+  margin-bottom: 5px; /* Adjust spacing between title and description */
 }
 
-.task-item .task-text {
+.task-text {
   font-size: 16px;
   cursor: pointer;
-  display: block;
 }
 
-.task-item .task-description {
+/* Task description styling */
+.task-description {
   font-size: 14px;
   color: #555;
-}
-
-.task-item .task-text.completed,
-.task-item .task-description.completed {
-  text-decoration: line-through;  /* Strikethrough */
-  color: #888; 
+  display: block; /* Ensures description is on a new line */
+  margin-top: 5px; /* Add some space between task title and description */
 }
 
 .task-actions {
   display: flex;
   flex-direction: row;
   align-items: center;
+  margin-left: 10px;
 }
 
 .task-actions button {
   margin-left: 10px;
-  padding: 5px;
+  padding: 8px;
   border: none;
   border-radius: 50%;
   background-color: transparent;
   cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  transition: background-color 0.3s ease-in-out;
 }
 
-.task-actions .toggle-btn,
-.task-actions .delete-btn {
-  width: 32px;  /* Set width of icon buttons */
-  height: 32px; /* Set height of icon buttons */
-  font-size: 20px; /* Set icon size */
+.task-actions .toggle-btn.complete-btn span {
+  color: green;
 }
 
-/* Color for button icons*/
-.task-actions .complete-btn span {
-  color: green; 
-}
-
-.task-actions .undo-btn span {
-  color: green; 
+.task-actions .toggle-btn.undo-btn span {
+  color: orange;
 }
 
 .task-actions .delete-btn span {
-  color: red; 
+  color: red;
 }
 
-.task-actions .toggle-btn:hover {
-  background-color: #f0f0f0;
-}
-
-.task-actions .delete-btn:hover {
-  background-color: #ffdddd;
-}
-
+/* Form styling */
 form {
   display: flex;
   flex-direction: column;
@@ -118,14 +132,37 @@ form input, form textarea {
 }
 
 form button {
-  background-color: #4CAF50;
+  background-color: #4caf50;
   color: white;
   padding: 10px 15px;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
 }
 
 form button:hover {
   background-color: #45a049;
+}
+
+/* Styling for the toggle arrow button */
+.toggle-completed-btn {
+  background-color: #e8f5e9; /* Match completed tasks background */
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.toggle-completed-btn:hover {
+  background-color: #d4e6d6; /* Slightly darker green for hover effect */
+}
+
+.toggle-completed-btn span {
+  font-size: 24px;
+  color: #333; /* Matches header color */
 }
