@@ -1,4 +1,3 @@
-// src/App.js
 import React, { useState, useEffect } from 'react';
 import { db, ref, set, get } from './firebase';
 import TaskItem from './components/TaskItem';
@@ -20,8 +19,8 @@ const App = () => {
           tasksData.push({ id: childSnapshot.key, ...task });
         });
 
-        // Sort tasks based on completion status, with incomplete tasks first
-        tasksData.sort((a, b) => a.completed - b.completed);
+        // Sort tasks: Incomplete tasks first, then completed tasks
+        tasksData.sort((a, b) => a.completed - b.completed || b.createdAt - a.createdAt);
         setTasks(tasksData);
       } else {
         console.log('No data available');
@@ -36,8 +35,12 @@ const App = () => {
       const taskRef = ref(db, 'tasks/' + Date.now());
       await set(taskRef, task);
 
-      // New tasks should appear at the top of the list
-      setTasks((prevTasks) => [task, ...prevTasks]);
+      // Add the new task and sort
+      setTasks((prevTasks) => {
+        const updatedTasks = [task, ...prevTasks];
+        updatedTasks.sort((a, b) => a.completed - b.completed || b.createdAt - a.createdAt);
+        return updatedTasks;
+      });
     } catch (e) {
       console.error('Error adding task: ', e);
     }
@@ -47,8 +50,8 @@ const App = () => {
   const deleteTask = async (id) => {
     try {
       const taskRef = ref(db, 'tasks/' + id);
-      await set(taskRef, null);  // Delete the task from Firebase
-      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id));  // Update the local task list
+      await set(taskRef, null); // Delete the task from Firebase
+      setTasks((prevTasks) => prevTasks.filter((task) => task.id !== id)); // Update the local task list
     } catch (e) {
       console.error('Error deleting task: ', e);
     }
@@ -60,12 +63,12 @@ const App = () => {
     if (task) {
       const updatedTask = { ...task, completed: !task.completed, updatedAt: Date.now() };
       const taskRef = ref(db, 'tasks/' + id);
-      await set(taskRef, updatedTask); // Update the task in Firebase
+      await set(taskRef, updatedTask);
 
-      // Update the local task list and sort
+      // Update and sort the task list
       setTasks((prevTasks) => {
         const updatedTasks = prevTasks.map((t) => (t.id === id ? updatedTask : t));
-        updatedTasks.sort((a, b) => a.completed - b.completed); // Sort tasks after each update
+        updatedTasks.sort((a, b) => a.completed - b.completed || b.createdAt - a.createdAt);
         return updatedTasks;
       });
     }
