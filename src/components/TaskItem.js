@@ -14,6 +14,7 @@ const TaskItem = ({ task, onToggleComplete, onDelete }) => {
 
   // Truncate the text if it exceeds a certain length
   const truncateText = (text, maxLength) => {
+    if (typeof text !== 'string') return '';  // If text is not a string, return an empty string
     return text.length > maxLength ? text.slice(0, maxLength) + '...' : text;
   };
 
