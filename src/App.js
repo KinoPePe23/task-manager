@@ -64,27 +64,29 @@ const App = () => {
       console.error('Logout failed: ', error.message);
     }
   };
+// Add a new task
+const addTask = async (task) => {
+  try {
+    if (!user) return; // Ensure the user is logged in
 
-  // Add a new task
-  const addTask = async (task) => {
-    try {
-      if (!user) return; // Ensure the user is logged in
+    const taskId = Date.now(); // Use current timestamp as a unique ID
+    const taskRef = ref(db, `tasks/${user.uid}/${taskId}`); // Reference the task location
+    const newTask = { id: taskId, ...task }; // Include ID in the task object
+    await set(taskRef, newTask); // Save the task to Firebase
 
-      const taskRef = ref(db, `tasks/${user.uid}/${Date.now()}`); // Store task under tasks/{user.uid}
-      await set(taskRef, task);
-      setTasks((prevTasks) => {
-        const newTasks = [task, ...prevTasks];
-        newTasks.sort((a, b) => {
-          const dateA = a.dueDate || a.createdAt;
-          const dateB = b.dueDate || b.createdAt;
-          return new Date(dateA) - new Date(dateB); // Sorting by date
-        });
-        return newTasks;
+    setTasks((prevTasks) => {
+      const updatedTasks = [newTask, ...prevTasks]; // Include the new task
+      updatedTasks.sort((a, b) => {
+        const dateA = a.dueDate || a.createdAt;
+        const dateB = b.dueDate || b.createdAt;
+        return new Date(dateA) - new Date(dateB); // Sort by date
       });
-    } catch (e) {
-      console.error('Error adding task: ', e);
-    }
-  };
+      return updatedTasks;
+    });
+  } catch (e) {
+    console.error('Error adding task: ', e);
+  }
+};
 
   // Delete a task
   const deleteTask = async (id) => {
