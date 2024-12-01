@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { db, ref, set, get, auth, logoutUser } from './firebase'; // Import Firebase services
+import { db, ref, set, get, auth, logoutUser, removeUserTasks } from './firebase'; // Import Firebase services
 import TaskItem from './components/TaskItem';
 import TaskForm from './components/TaskForm';
 import Login from './components/Login';  // Import Login component
@@ -128,6 +128,26 @@ const App = () => {
     setShowCompleted(!showCompleted);  // Toggle visibility of completed tasks
   };
 
+  // Delete user's account and tasks
+  const handleDeleteAccount = async () => {
+    if (window.confirm('Are you sure you want to delete your account and all tasks?')) {
+      try {
+        if (user) {
+          // Remove tasks from the database first
+          await removeUserTasks(user.uid);
+          // Delete the user account from Firebase Authentication
+          await user.delete();
+          // Clear the user state
+          setUser(null);
+          setTasks([]); // Clear tasks from state
+          setIsLogin(true); // Redirect to login page
+        }
+      } catch (error) {
+        console.error('Error deleting account: ', error);
+      }
+    }
+  };
+
   return (
     <div className="app">
       {user ? (
@@ -175,6 +195,9 @@ const App = () => {
               )}
             </div>
           </div>
+          <button className="delete-account-btn" onClick={handleDeleteAccount}>
+            Delete Account
+          </button>
         </>
       ) : isLogin ? (
         <Login onAuthSuccess={handleAuthSuccess} setIsLogin={setIsLogin} />

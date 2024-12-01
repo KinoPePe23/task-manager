@@ -60,5 +60,16 @@ const logoutUser = () => {
     });
 };
 
+// Function to remove a user's tasks from Firebase
+export const removeUserTasks = async (uid) => {
+  try {
+    const userTasksRef = ref(db, `tasks/${uid}`);
+    await remove(userTasksRef);  // Remove all tasks under the user's UID
+    console.log('User tasks deleted');
+  } catch (error) {
+    console.error('Error deleting user tasks:', error);
+  }
+};
+
 // Export necessary functions and services
 export { db, ref, set, get, remove, auth, registerUser, loginUser, logoutUser };
